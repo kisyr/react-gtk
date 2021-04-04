@@ -1,0 +1,35 @@
+{
+  "name": "react-gtk",
+  "version": "0.1.0",
+  "description": "React components for GTK for use with GJS.",
+  "main": "src/index.js",
+  "scripts": {
+    "example:widgets": "webpack --config examples/widgets/webpack.config.js && gjs examples/widgets/dist/app.js",
+    "example:counter": "webpack --config examples/counter/webpack.config.js && gjs examples/counter/dist/app.js",
+    "example:todo": "webpack --config examples/todo/webpack.config.js && gjs examples/todo/dist/app.js",
+    "example:images": "webpack --config examples/images/webpack.config.js && gjs examples/images/dist/app.js",
+    "example:tree": "webpack --config examples/tree/webpack.config.js && gjs examples/tree/dist/app.js"
+  },
+  "keywords": [
+    "gtk",
+    "react"
+  ],
+  "author": "kim.syrjala@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "just-kebab-case": "^1.0.0",
+    "ramda": "^0.27.1",
+    "react-reconciler": "0.26.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "react": "16.8.0",
+    "react-native-uuid": "^1.4.9",
+    "webpack": "^5.28.0",
+    "webpack-cli": "^4.5.0"
+  }
+}
