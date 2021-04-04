@@ -1,6 +1,6 @@
 import clone from 'ramda/src/clone';
 import { Gtk, GdkPixbuf } from '../env';
-import { createWidget } from '../lib';
+import Widget from './Widget';
 
 function createPixbuf(pixbuf) {
 	return GdkPixbuf.Pixbuf.new_from_file_at_scale(
@@ -11,26 +11,24 @@ function createPixbuf(pixbuf) {
 	);
 }
 
-const Image = (props) => {
-	const appliedProps = clone(props);
-
-	if (appliedProps.pixbuf) {
-		appliedProps.pixbuf = createPixbuf(props.pixbuf);
-		delete appliedProps.file;
+export default class Image extends Widget {
+	get type() {
+		return Gtk.Image;
 	}
 
-	const {
-		type,
-		instance,
-		appendChild,
-		insertBefore,
-		removeChild,
-		show,
-		update,
-	} = createWidget(Gtk.Image, appliedProps);
+	constructor(props) {
+		const appliedProps = clone(props);
 
-	const appliedUpdate = (element, changes) => {
-		let appliedSet = clone(changes.set);
+		if (appliedProps.pixbuf) {
+			appliedProps.pixbuf = createPixbuf(props.pixbuf);
+			delete appliedProps.file;
+		}
+
+		super(appliedProps);
+	}
+
+	update(changes) {
+		const appliedSet = clone(changes.set);
 
 		const pixbufSet = appliedSet.find(([ prop ]) => prop === 'pixbuf');
 
@@ -38,19 +36,7 @@ const Image = (props) => {
 			pixbufSet[1] = createPixbuf(pixbufSet[1]);
 		}
 
-		update(element, { ...changes, set: appliedSet });
-	};
-
-	return {
-		type,
-		instance,
-		appendChild,
-		insertBefore,
-		removeChild,
-		show,
-		update: appliedUpdate,
-	};
-};
-
-export default Image;
+		super.update({ ...changes, set: appliedSet });
+	}
+}
 

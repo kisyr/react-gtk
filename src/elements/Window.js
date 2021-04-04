@@ -1,57 +1,41 @@
 import { Gtk } from '../env';
-import { createWidget } from '../lib';
+import Widget from './Widget';
 
-const Window = (props, rootContainerInstance) => {
-	const appliedProps = {
-		...props,
-		application: rootContainerInstance,
-	};
+export default class Window extends Widget {
+	get type() {
+		return Gtk.Window;
+	}
 
-	const {
-		type,
-		instance,
-		appendChild,
-		insertBefore,
-		removeChild,
-		show,
-		update,
-	} = createWidget(Gtk.Window, appliedProps);
+	constructor(props, rootContainerInstance) {
+		const appliedProps = {
+			...props,
+			application: rootContainerInstance,
+		};
 
-	const appliedAppendChild = (parentElement, childElement) => {
-		const children = parentElement.instance.get_children();
+		super(appliedProps);
+	}
+
+	appendChild(child) {
+		const children = this.instance.get_children();
 
 		if (
-			!children.includes(childElement.instance) &&
-			childElement.instance instanceof Gtk.HeaderBar
+			!children.includes(child.instance) &&
+			child.instance instanceof Gtk.HeaderBar
 		) {
-			parentElement.instance.set_titlebar(childElement.instance);
+			this.instance.set_titlebar(child.instance);
 			return;
 		}
 
-		appendChild(parentElement, childElement);
-	};
+		super.appendChild(child);
+	}
 
-	const appliedInsertBefore = appliedAppendChild;
-
-	const appliedRemoveChild = (parentElement, childElement) => {
-		if (childElement.instance instanceof Gtk.HeaderBar) {
-			parentElement.instance.set_titlebar(null);
+	removeChild(child) {
+		if (child.instance instanceof Gtk.HeaderBar) {
+			this.instance.set_titlebar(null);
 			return;
 		}
 
-		removeChild(parentElement, childElement);
-	};
-
-	return {
-		type,
-		instance,
-		appendChild: appliedAppendChild,
-		insertBefore: appliedInsertBefore,
-		removeChild: appliedRemoveChild,
-		show,
-		update,
-	};
-};
-
-export default Window;
+		super.removeChild(child);
+	}
+}
 

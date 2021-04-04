@@ -22,7 +22,7 @@ export default {
 			throw new Error(`Unknown component: ${type}`);
 		}
 
-		return Type(props, rootContainerInstance, hostContext, internalInstanceHandle);
+		return new Type(props, rootContainerInstance, hostContext, internalInstanceHandle);
 	},
 
 	createTextInstance(
@@ -42,7 +42,7 @@ export default {
 		child.show(child);
 
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.appendChild(parentInstance, child);
+			parentInstance.appendChild(child);
 		}
 	},
 
@@ -122,7 +122,7 @@ export default {
 
 		child.show(child);
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.appendChild(parentInstance, child);
+			parentInstance.appendChild(child);
 		}
 	},
 
@@ -131,7 +131,7 @@ export default {
 
 		child.show(child);
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.appendChild(parentInstance, child);
+			parentInstance.appendChild(child);
 		}
 	},
 
@@ -140,7 +140,7 @@ export default {
 
 		child.show(child);
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.insertBefore(parentInstance, child, beforeChild);
+			parentInstance.insertBefore(child, beforeChild);
 		}
 	},
 
@@ -149,7 +149,7 @@ export default {
 
 		child.show(child);
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.insertBefore(parentInstance, child, beforeChild);
+			parentInstance.insertBefore(child, beforeChild);
 		}
 	},
 
@@ -157,7 +157,7 @@ export default {
 		log('removeChild', parentInstance, child);
 
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.removeChild(parentInstance, child);
+			parentInstance.removeChild(child);
 		}
 	},
 
@@ -165,7 +165,7 @@ export default {
 		log('removeChildFromContainer', parentInstance, child);
 
 		if (!R.is(Gtk.Application, parentInstance)) {
-			parentInstance.removeChild(parentInstance, child);
+			parentInstance.removeChild(child);
 		}
 	},
 
@@ -205,7 +205,7 @@ export default {
 	) {
 		log('commitUpdate', stringify(changes));
 
-		instance.update(instance, changes);
+		instance.update(changes);
 	}
 };
 

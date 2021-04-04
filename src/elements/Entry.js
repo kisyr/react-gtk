@@ -1,9 +1,15 @@
 import { Gtk } from '../env';
-import { createControlledWidget } from '../lib';
+import Widget from './Widget';
 
-const Entry = (props) => createControlledWidget(Gtk.Entry, props, [
-	[ 'text', 'onChanged' ],
-]);
+export default class Entry extends Widget {
+	get type() {
+		return Gtk.Entry;
+	}
 
-export default Entry;
+	get controls() {
+		return [
+			[ 'text', 'onChanged' ],
+		];
+	}
+};
 

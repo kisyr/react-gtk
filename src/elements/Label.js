@@ -1,7 +1,9 @@
 import { Gtk } from '../env';
-import { createWidget } from '../lib';
+import Widget from './Widget';
 
-const Label = (props) => createWidget(Gtk.Label, props);
-
-export default Label;
+export default class Label extends Widget {
+	get type() {
+		return Gtk.Label;
+	}
+}
 

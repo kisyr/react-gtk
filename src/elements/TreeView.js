@@ -1,6 +1,6 @@
 import omit from 'ramda/src/omit';
 import { GObject, Gtk } from '../env';
-import { createControlledWidget } from '../lib';
+import Widget from './Widget';
 
 function modelAppend(model, items, root = null) {
 	if (items && Array.isArray(items)) {
@@ -16,55 +16,38 @@ function modelAppend(model, items, root = null) {
 	}
 }
 
-const TreeView = (props) => {
-	const model = new Gtk.TreeStore();
-	model.set_column_types([ GObject.TYPE_OBJECT ]);
-	modelAppend(model, props.treeStore);
+export default class TreeView extends Widget {
+	get type() {
+		return Gtk.TreeView;
+	}
 
-	const appliedProps = {
-		...omit([
-			'treeStore',
-			'onRowExpanded',
-			'onRowCollapsed',
-			'onRowSelected',
-		], props),
-		model,
-	};
+	constructor(props) {
+		const model = new Gtk.TreeStore();
+		model.set_column_types([ GObject.TYPE_OBJECT ]);
+		modelAppend(model, props.treeStore);
 
-	const {
-		type,
-		instance,
-		insertBefore,
-		removeChild,
-		show,
-		update,
-	} = createControlledWidget(Gtk.TreeView, appliedProps, [
-		// TODO: Support custom handler callback for complex changes.
-		// Also we probably need to catch a change signal before the
-		// model is updated in backend so we don't need to reset it.
-	]);
+		const appliedProps = {
+			...omit([
+				'treeStore',
+				'onRowExpanded',
+				'onRowCollapsed',
+				'onRowSelected',
+			], props),
+			model,
+		};
 
-	const appliedAppendChild = (parentElement, childElement) => {
-		const children = parentElement.instance.get_children();
+		super(appliedProps);
+	}
+
+	appendChild(child) {
+		const children = this.instance.get_children();
 
 		if (
-			!children.includes(childElement.instance) &&
-			childElement.instance instanceof Gtk.TreeViewColumn
+			!children.includes(child.instance) &&
+			child.instance instanceof Gtk.TreeViewColumn
 		) {
-			parentElement.instance.append_column(childElement.instance);
+			this.instance.append_column(child.instance);
 		}
-	};
-
-	return {
-		type,
-		instance,
-		appendChild: appliedAppendChild,
-		insertBefore,
-		removeChild,
-		show,
-		update,
-	};
-};
-
-export default TreeView;
+	}
+}
 

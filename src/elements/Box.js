@@ -1,7 +1,9 @@
 import { Gtk } from '../env';
-import { createWidget } from '../lib';
+import Widget from './Widget';
 
-const Box = (props) => createWidget(Gtk.Box, props);
-
-export default Box;
+export default class Box extends Widget {
+	get type() {
+		return Gtk.Box;
+	}
+}
 

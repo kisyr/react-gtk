@@ -1,6 +1,6 @@
 import omit from 'ramda/src/omit';
 import { Gtk } from '../env';
-import { createControlledWidget } from '../lib';
+import Widget from './Widget';
 
 const adjustmentProps = [ 'lower', 'upper', 'pageIncrement', 'stepIncrement' ];
 
@@ -18,50 +18,40 @@ function createAdjustment(adjustment) {
 	});
 }
 
-const SpinButton = (props) => {
-	const adjustment = createAdjustment(props);
+export default class SpinButton extends Widget {
+	get type() {
+		return Gtk.SpinButton;
+	}
 
-	const appliedProps = {
-		...omitAdjustmentProps(props),
-		adjustment,
-	};
+	get controls() {
+		return [
+			[ 'value', 'onValueChanged' ],
+		];
+	}
 
-	const {
-		type,
-		instance,
-		appendChild,
-		insertBefore,
-		removeChild,
-		show,
-		update,
-	} = createControlledWidget(Gtk.SpinButton, appliedProps, [
-		[ 'value', 'onValueChanged' ],
-	]);
+	constructor(props) {
+		const adjustment = createAdjustment(props);
 
-	const appliedUpdate = (element, changes) => {
+		const appliedProps = {
+			...omitAdjustmentProps(props),
+			adjustment,
+		};
+
+		super(appliedProps);
+	}
+
+	update(changes) {
 		adjustmentProps.forEach(adjustmentProp => {
 			const valueSet = changes.set.find(([ prop ]) => prop === adjustmentProp);
 
 			if (valueSet) {
-				element.adjustment[valueSet[0]] = valueSet[1];
+				this.adjustment[valueSet[0]] = valueSet[1];
 			}
 		});
 
 		const appliedSet = changes.set.filter(([ prop ]) => !adjustmentProps.includes(prop));
 
-		update(element, { ...changes, set: appliedSet });
-	};
-
-	return {
-		type,
-		instance,
-		appendChild,
-		insertBefore,
-		removeChild,
-		show,
-		update: appliedUpdate,
-	};
-};
-
-export default SpinButton;
+		super.update({ ...changes, set: appliedSet });
+	}
+}
 

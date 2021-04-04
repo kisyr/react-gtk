@@ -1,7 +1,9 @@
 import { Gtk } from '../env';
-import { createWidget } from '../lib';
+import Widget from './Widget';
 
-const HeaderBar = (props) => createWidget(Gtk.HeaderBar, props);
-
-export default HeaderBar;
+export default class HeaderBar extends Widget {
+	get type() {
+		return Gtk.HeaderBar;
+	}
+}
 

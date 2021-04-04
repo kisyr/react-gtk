@@ -1,42 +1,30 @@
 import { Gtk } from '../env';
-import { createWidget } from '../lib';
+import Widget from './Widget';
 
-const TreeViewColumn = (props) => {
-	const {
-		type,
-		instance,
-		removeChild,
-	} = createWidget(Gtk.TreeViewColumn, props);
+export default class TreeViewColumn extends Widget {
+	get type() {
+		return Gtk.TreeViewColumn;
+	}
 
-	const appliedAppendChild = (parentElement, childElement) => {
-		const children = parentElement.instance.get_cells();
+	appendChild(child) {
+		const children = this.instance.get_cells();
 
 		if (
-			!children.includes(childElement.instance) &&
-			childElement.instance instanceof Gtk.CellRenderer
+			!children.includes(child.instance) &&
+			child.instance instanceof Gtk.CellRenderer
 		) {
-			parentElement.instance.pack_start(childElement.instance, true);
-			parentElement.instance.set_cell_data_func(
-				childElement.instance,
+			this.instance.pack_start(child.instance, true);
+			this.instance.set_cell_data_func(
+				child.instance,
 				(column, cell, model, iterator) => {
-					childElement.dataFunc(column, cell, model, iterator);
+					child.dataFunc(column, cell, model, iterator);
 				}
 			);
 		}
-	};
+	}
 
-	const appliedInsertBefore = appliedAppendChild;
+	show() {}
 
-	return {
-		type,
-		instance,
-		appendChild: appliedAppendChild,
-		insertBefore: appliedInsertBefore,
-		removeChild,
-		show: () => {},
-		update: () => {},
-	};
-};
-
-export default TreeViewColumn;
+	update(changes) {}
+}
 
