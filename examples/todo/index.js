@@ -38,6 +38,9 @@ const App = (props) => {
 	};
 
 	const handleTextSubmit = () => {
+		if (text == '') {
+			return false;
+		}
 		setTasks([
 			...tasks,
 			{ id: uuid.v4(), description: text, completed: false },

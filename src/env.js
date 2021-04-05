@@ -26,5 +26,10 @@ window.clearTimeout = GLib.source_remove;
 // Support console.log
 window.console = { log: print, warn: print, error: print };
 
+// Support proper stringify
+window.stringify = function(data) {
+	return JSON.stringify(data, (key, value) => typeof value === 'undefined' ? null : value);
+};
+
 export { GObject, GLib, Gio, GdkPixbuf, Gtk };
 

@@ -25,25 +25,12 @@ export default class Widget {
 
 		this.instance = new this.type(appliedProps);
 
-		// Set the signal handlers with our mapped names (kebabs).
-		// TODO: Can we refactor this by just triggering an update like
-		// we do below with controlled handlers?
-		updateInstanceSignals(this.instance, {
-			unset: [],
-			set: Object.entries(props).filter(([ prop ]) => isSignal(this.type, prop)),
-		});
+		// Trigger an update to initially set any signal handlers. This will
+		// also set value props but that shouldn't matter.
+		const appliedSet = Object.entries(props)
+			.filter(([ prop ]) => prop !== 'children');
 
-		// Set any controlled props and signal handlers.
-		const controlledSet = this.controls.reduce((result, scheme) => {
-			const [ schemeProp, schemeHandler ] = scheme;
-			return [
-				...result,
-				[ schemeProp, props[schemeProp] ],
-				[ schemeHandler, props[schemeHandler] || (() => {}) ],
-			];
-		}, []);
-
-		this.update({ unset: [], set: controlledSet });
+		this.update({ unset: [], set: appliedSet });
 	}
 
 	appendChild(child) {
@@ -67,6 +54,8 @@ export default class Widget {
 	}
 
 	update(changes) {
+		print('-- update --', stringify(changes));
+
 		// Create rewritten signal handlers so that we can trigger handler
 		// with a new value.
 		// Is this actually necessary other than doing complex handler logic?
@@ -76,6 +65,13 @@ export default class Widget {
 			const handlerSet = changes.set.find(([ prop ]) => prop === schemeHandler);
 			const overwrittenHandler = (...args) => {
 				const newValue = this.instance[schemeProp];
+				print('-- overwrittenHandler --', stringify({ scheme, handlerSet, valueSet }));
+				if (valueSet) {
+					const blockedUpdate = rewriteSignalHandler(this.instance, [ schemeHandler ], () => {
+						this.instance[schemeProp] = valueSet[1];
+					});
+					blockedUpdate();
+				}
 				if (handlerSet) {
 					handlerSet[1](newValue);
 				}
@@ -93,6 +89,8 @@ export default class Widget {
 			.filter(([ prop ]) => !controlledValueProps.includes(prop))
 			.filter(([ prop ]) => !controlledHandlerProps.includes(prop))
 			.concat(controlledHandlerSet);
+
+		print('-- appliedSet --', stringify(appliedSet));
 
 		updateInstanceProps(this.instance, {
 			unset: changes.unset.filter(prop => isProp(this.type, prop)),
