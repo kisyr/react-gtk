@@ -55,6 +55,20 @@ export default class Widget {
 
 	update(changes) {
 		print('-- update --', stringify(changes));
+		// FIXME: Bug! Right now we are setting the controlled handlers on each
+		// update even when the changes don't include it. That means that a change
+		// of 'prepareUpdate {"text":""} {"text":""} true' would trigger this but
+		// the actual changes object doesn't include the non-diff "text". The
+		// handler would be updated but the below logic can't find the "text"
+		// so it doesn't think it's controlled anymore, so no resetting it in
+		// the overwritten handler!
+		// Why does the reconciler think that it needs update when it isn't changed?
+		// prepareUpdate {"text":""} {"text":""} true
+		// -- ["text","onChanged","children"] ["text","onChanged","children"]
+		// Seems when the component including the widget updates, it's hook 
+		// function updates signature and diffs, which triggers the update.
+		// We need to handle that and still know if there was an old value bound.
+		this.controlledValues = this.controlledValues || {};
 
 		// Create rewritten signal handlers so that we can trigger handler
 		// with a new value.
@@ -63,12 +77,18 @@ export default class Widget {
 			const [ schemeProp, schemeHandler ] = scheme;
 			const valueSet = changes.set.find(([ prop ]) => prop === schemeProp);
 			const handlerSet = changes.set.find(([ prop ]) => prop === schemeHandler);
+			// Test storing the current controlled value in case it's lost in
+			// future updates/diffs.This seems to work but maybe can refactor?
+			if (valueSet) {
+				this.controlledValues[schemeProp] = valueSet[1];
+			}
 			const overwrittenHandler = (...args) => {
 				const newValue = this.instance[schemeProp];
 				print('-- overwrittenHandler --', stringify({ scheme, handlerSet, valueSet }));
-				if (valueSet) {
+				print('-- controlledValues --', stringify(this.controlledValues));
+				if (this.controlledValues.hasOwnProperty(schemeProp)) {
 					const blockedUpdate = rewriteSignalHandler(this.instance, [ schemeHandler ], () => {
-						this.instance[schemeProp] = valueSet[1];
+						this.instance[schemeProp] = this.controlledValues[schemeProp];
 					});
 					blockedUpdate();
 				}

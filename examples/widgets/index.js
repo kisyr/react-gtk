@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
 import { createApp } from '../../src/render';
-import { Window, HeaderBar, Box, Label, Button, SpinButton } from '../../src/components';
+import {
+	Window,
+	HeaderBar,
+	Box,
+	Label,
+	Button,
+	SpinButton,
+	Entry,
+} from '../../src/components';
 import { Gtk } from '../../src/env';
-
-const LabelExample = (props) => {
-	return (
-		<Label label="Hello world!" />
-	);
-};
-
-const ButtonExample = (props) => {
-	const handleClick = () => {
-		print('You clicked me!');
-	};
-
-	return (
-		<Button label="Click me!" onClicked={handleClick} />
-	);
-};
 
 const SpinButtonExample = (props) => {
 	const [ value, setValue ] = useState(5);
 
 	const handleValueChanged = (newValue) => {
 		print('SpinButton::handleValueChanged', newValue);
-		setValue(newValue);
+		if (props.noop) {
+			setValue(newValue);
+		}
 	};
 
 	return (
@@ -38,16 +32,38 @@ const SpinButtonExample = (props) => {
 	);
 };
 
+const EntryExample = (props) => {
+	const [ text, setText ] = useState('');
+
+	const handleChanged = (newText) => {
+		print('Entry::handleChanged', newText);
+		if (props.noop) {
+			setText(newText);
+		}
+	};
+
+	return (
+		<Entry text={text} onChanged={handleChanged} />
+	);
+};
+
 const App = (props) => {
-	const [ counter, setCounter ] = useState(0);
+	const [ noop, setNoop ] = useState(true);
+
+	const handleToggleNoop = () => {
+		setNoop(!noop);
+	};
 
 	return (
 		<Window title="Widgets" defaultWidth={640} defaultHeight={480}>
 			<HeaderBar showCloseButton={true} hasSubtitle={true} title="Widgets" />
-			<Box orientation={Gtk.Orientation.VERTICAL}>
-				<LabelExample />
-				<ButtonExample />
-				<SpinButtonExample />
+			<Box orientation={Gtk.Orientation.VERTICAL} homogeneous={true}>
+				<Box orientation={Gtk.Orientation.HORIZONTAL}>
+					<Label label={noop ? 'Widgets are updating' : 'Widgets are noop'} />
+					<Button label="Toggle noop" onClicked={handleToggleNoop} />
+				</Box>
+				<SpinButtonExample noop={noop} />
+				<EntryExample noop={noop} />
 			</Box>
 		</Window>
 	);

@@ -3,7 +3,6 @@ const withoutChildren = R.omit([ 'children' ]);
 import { Gtk } from './env';
 import publicElements from './elements';
 
-const stringify = JSON.stringify;
 const log = print;
 
 export default {
@@ -80,6 +79,7 @@ export default {
 		const set = R.reject(R.contains(R.__, R.toPairs(oldNoChildren)), R.toPairs(newNoChildren));
 
 		log('prepareUpdate', stringify(oldNoChildren), stringify(newNoChildren), !propsAreEqual);
+		log('--', stringify(Object.keys(oldProps)), stringify(Object.keys(newProps)));
 
 		return propsAreEqual ? null : { unset, set };
 	},
