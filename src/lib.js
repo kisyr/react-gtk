@@ -48,7 +48,6 @@ export function unblockSignalHandler(instance, prop) {
 export function blockSignalHandlers(instance) {
 	const signalHandlers = instance._connectedSignals || {};
 	Object.entries(signalHandlers).forEach(([signalName, signalHandler]) => {
-		print('-- blocking --', signalName);
 		GObject.signal_handler_block(instance, signalHandler);
 	});
 }
@@ -57,7 +56,6 @@ export function unblockSignalHandlers(instance) {
 	const signalHandlers = instance._connectedSignals || {};
 	Object.entries(signalHandlers).forEach(([signalName, signalHandler]) => {
 		if (GObject.signal_handler_is_connected(instance, signalHandler)) {
-			print('-- unblocking --', signalName);
 			GObject.signal_handler_unblock(instance, signalHandler);
 		}
 	});
