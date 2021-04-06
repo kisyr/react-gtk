@@ -3,6 +3,7 @@ import Button from './Button';
 import CellRendererText from './CellRendererText';
 import Entry from './Entry';
 import Expander from './Expander';
+import EventBox from './EventBox';
 import HeaderBar from './HeaderBar';
 import Image from './Image';
 import Label from './Label';
@@ -18,6 +19,7 @@ export default {
 	'gtk-cellrenderertext': CellRendererText,
 	'gtk-entry': Entry,
 	'gtk-expander': Expander,
+	'gtk-eventbox': EventBox,
 	'gtk-headerbar': HeaderBar,
 	'gtk-image': Image,
 	'gtk-label': Label,
