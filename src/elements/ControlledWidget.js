@@ -23,8 +23,6 @@ export default class ControlledWidget {
 			.filter(([ prop ]) => prop !== 'children')
 		);
 
-		print('---- ControlledWidget::constructor ----', stringify(appliedProps));
-
 		this.instance = new this.type();
 
 		// Trigger an update to initialize controlled handlers.
@@ -55,15 +53,6 @@ export default class ControlledWidget {
 	}
 
 	update(changes) {
-		// FIXME: YAY THIS SEEMS TO WORK PRETTY GOOD WHEN BLOCKING *ALL* HANDLERS
-		// ON updateInstanceProps!!!!!!!
-		// BUT there seems to be some small issue with initial/current controlled
-		// value because toggling noop uses the last value after toggle.
-		// We can fix this shit.
-		// Before component update, appliedSet gets onNotify::expanded, but after
-		// component update it gets onChangeExpanded.
-		print('---- ControlledWidget::update ----', stringify(changes));
-
 		const getControlledHandlerName = (prop) => {
 			const ucfirst = prop.charAt(0).toUpperCase() + prop.slice(1);
 			return `onChange${ucfirst}`;
@@ -71,6 +60,7 @@ export default class ControlledWidget {
 
 		// Find out which props we can control based on this.controls and set props.
 		// [ [ 'text', 'abc123', 'onChangeText', function ], ... ]
+		// TODO: Refactor
 		const validControlledProps = this.controls.reduce((result, controlledProp) => {
 			const valueSet = changes.set.find(([ prop ]) => prop === controlledProp);
 			this.controlledValueProps = this.controlledValueProps || {};
@@ -114,13 +104,18 @@ export default class ControlledWidget {
 				print(`notify::${controlledProp}`, newValue, oldValue);
 				print('-- control --', stringify(control));
 
+				// Extra security to skip feedback loop. We actually already 
+				// avoid this by blocking *all* connected signals on instance
+				// inside updateInstanceProps when resetting below.
 				if (newValue == oldValue) {
 					print('-- skip --');
 					return;
 				}
 
+				// Reset the instance prop value because this is controlled.
+				// This is done with blocking *all* connected signals inside
+				// updateInstanceProps.
 				print('-- begin reset --', oldValue);
-				//this.instance[controlledProp] = oldValue;
 				updateInstanceProps(this.instance, {
 					unset: [],
 					set: [[ controlledProp, oldValue ]],
@@ -142,16 +137,16 @@ export default class ControlledWidget {
 			.filter(([ prop ]) => !validControlledProps.find(control => control[2] === prop))
 			.concat(controlledHandlerSet);
 
-		print('---- appliedSet ----', stringify(appliedSet));
-		print('---- validControlledProps ----', stringify(validControlledProps));
-
-		// Updating instance props are going to trigger 'notify' signals
-		// and we cannot block them in any way I know. Our 'notify' handlers
-		// are gonna compare old & new value though to avoid feedback loops.
+		// Update instance prop values. This is done with blocking *all*
+		// connected signals for instance to avoid any side effects or
+		// feedback loops.
 		updateInstanceProps(this.instance, {
 			unset: changes.unset.filter(prop => isProp(this.type, prop)),
 			set: appliedSet.filter(([ prop ]) => isProp(this.type, prop)),
 		});
+
+		// Update instance signals. This includes the overwritten handlers
+		// for controlled props.
 		updateInstanceSignals(this.instance, {
 			unset: changes.unset.filter(prop => isSignal(this.type, prop)),
 			set: appliedSet.filter(([ prop ]) => isSignal(this.type, prop)),
