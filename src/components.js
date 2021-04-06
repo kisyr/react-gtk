@@ -12,6 +12,7 @@ const Box = wrap('gtk-box');
 const Button = wrap('gtk-button');
 const CellRendererText = wrap('gtk-cellrenderertext');
 const Entry = wrap('gtk-entry');
+const Expander = wrap('gtk-expander');
 const HeaderBar = wrap('gtk-headerbar');
 const Image = wrap('gtk-image');
 const Label = wrap('gtk-label');
@@ -25,6 +26,7 @@ export {
 	Button,
 	CellRendererText,
 	Entry,
+	Expander,
 	HeaderBar,
 	Image,
 	Label,

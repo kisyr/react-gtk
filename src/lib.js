@@ -45,6 +45,24 @@ export function unblockSignalHandler(instance, prop) {
 	}
 }
 
+export function blockSignalHandlers(instance) {
+	const signalHandlers = instance._connectedSignals || {};
+	Object.entries(signalHandlers).forEach(([signalName, signalHandler]) => {
+		print('-- blocking --', signalName);
+		GObject.signal_handler_block(instance, signalHandler);
+	});
+}
+
+export function unblockSignalHandlers(instance) {
+	const signalHandlers = instance._connectedSignals || {};
+	Object.entries(signalHandlers).forEach(([signalName, signalHandler]) => {
+		if (GObject.signal_handler_is_connected(instance, signalHandler)) {
+			print('-- unblocking --', signalName);
+			GObject.signal_handler_unblock(instance, signalHandler);
+		}
+	});
+}
+
 export function rewriteSignalHandler(instance, props, callback) {
 	return function(...args) {
 		let error = null;
@@ -70,8 +88,10 @@ export function updateInstanceSignals(instance, changes) {
 }
 
 export function updateInstanceProps(instance, changes) {
+	blockSignalHandlers(instance);
 	changes.unset.forEach(prop => instance[prop] = null);
 	changes.set.forEach(([ prop, value ]) => instance[prop] = value);
+	unblockSignalHandlers(instance);
 }
 
 export function isProp(type, prop) {

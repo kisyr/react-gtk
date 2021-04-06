@@ -34,6 +34,7 @@ const App = (props) => {
 	const [ tasks, setTasks ] = useState([]);
 
 	const handleTextChange = (newText) => {
+		print('handleTextChange', newText);
 		setText(newText);
 	};
 
@@ -41,10 +42,12 @@ const App = (props) => {
 		if (text == '') {
 			return false;
 		}
+/*
 		setTasks([
 			...tasks,
 			{ id: uuid.v4(), description: text, completed: false },
 		]);
+*/
 		setText('');
 	};
 
@@ -72,7 +75,7 @@ const App = (props) => {
 			<Box orientation={Gtk.Orientation.VERTICAL} spacing={10}>
 				<Entry
 					text={text}
-					onChanged={handleTextChange}
+					onChangeText={handleTextChange}
 					onActivate={handleTextSubmit}
 				/>
 				{tasks.map((task, index) => (

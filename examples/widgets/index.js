@@ -8,6 +8,7 @@ import {
 	Button,
 	SpinButton,
 	Entry,
+	Expander,
 } from '../../src/components';
 import { Gtk } from '../../src/env';
 
@@ -16,7 +17,7 @@ const SpinButtonExample = (props) => {
 
 	const handleValueChanged = (newValue) => {
 		print('SpinButton::handleValueChanged', newValue);
-		if (props.noop) {
+		if (!props.noop) {
 			setValue(newValue);
 		}
 	};
@@ -35,15 +36,34 @@ const SpinButtonExample = (props) => {
 const EntryExample = (props) => {
 	const [ text, setText ] = useState('');
 
-	const handleChanged = (newText) => {
-		print('Entry::handleChanged', newText);
-		if (props.noop) {
+	const handleChange = (newText) => {
+		print('Entry::handleChange', newText);
+		if (!props.noop) {
 			setText(newText);
 		}
 	};
 
 	return (
-		<Entry text={text} onChanged={handleChanged} />
+		<Entry text={text} onChangeText={handleChange} />
+	);
+};
+
+const ExpanderExample = (props) => {
+	const [ expanded, setExpanded ] = useState(false);
+
+	const handleChange = () => {
+		print('Expander::handleChange');
+		print('noop = ', props.noop, stringify(props));
+		if (!props.noop) {
+			print('Expander::setExpanded', !expanded);
+			setExpanded(!expanded);
+		}
+	};
+
+	return (
+		<Expander expanded={expanded} onChangeExpanded={handleChange}>
+			<Label label="Expanded!" />
+		</Expander>
 	);
 };
 
@@ -59,11 +79,12 @@ const App = (props) => {
 			<HeaderBar showCloseButton={true} hasSubtitle={true} title="Widgets" />
 			<Box orientation={Gtk.Orientation.VERTICAL} homogeneous={true}>
 				<Box orientation={Gtk.Orientation.HORIZONTAL}>
-					<Label label={noop ? 'Widgets are updating' : 'Widgets are noop'} />
+					<Label label={!noop ? 'Widgets are updating' : 'Widgets are noop'} />
 					<Button label="Toggle noop" onClicked={handleToggleNoop} />
 				</Box>
 				<SpinButtonExample noop={noop} />
 				<EntryExample noop={noop} />
+				<ExpanderExample noop={noop} />
 			</Box>
 		</Window>
 	);

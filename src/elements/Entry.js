@@ -1,15 +1,13 @@
 import { Gtk } from '../env';
-import Widget from './Widget';
+import ControlledWidget from './ControlledWidget';
 
-export default class Entry extends Widget {
+export default class Entry extends ControlledWidget {
 	get type() {
 		return Gtk.Entry;
 	}
 
 	get controls() {
-		return [
-			[ 'text', 'onChanged' ],
-		];
+		return [ 'text' ];
 	}
 };
 
