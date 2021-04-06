@@ -54,7 +54,7 @@ export default class Widget {
 	}
 
 	update(changes) {
-		print('-- update --', stringify(changes));
+		log('-- update --', stringify(changes));
 		// FIXME: Bug! Right now we are setting the controlled handlers on each
 		// update even when the changes don't include it. That means that a change
 		// of 'prepareUpdate {"text":""} {"text":""} true' would trigger this but
@@ -84,8 +84,8 @@ export default class Widget {
 			}
 			const overwrittenHandler = (...args) => {
 				const newValue = this.instance[schemeProp];
-				print('-- overwrittenHandler --', stringify({ scheme, handlerSet, valueSet }));
-				print('-- controlledValues --', stringify(this.controlledValues));
+				log('-- overwrittenHandler --', stringify({ scheme, handlerSet, valueSet }));
+				log('-- controlledValues --', stringify(this.controlledValues));
 				if (this.controlledValues.hasOwnProperty(schemeProp)) {
 					const blockedUpdate = rewriteSignalHandler(this.instance, [ schemeHandler ], () => {
 						this.instance[schemeProp] = this.controlledValues[schemeProp];
@@ -110,7 +110,7 @@ export default class Widget {
 			.filter(([ prop ]) => !controlledHandlerProps.includes(prop))
 			.concat(controlledHandlerSet);
 
-		print('-- appliedSet --', stringify(appliedSet));
+		log('-- appliedSet --', stringify(appliedSet));
 
 		updateInstanceProps(this.instance, {
 			unset: changes.unset.filter(prop => isProp(this.type, prop)),

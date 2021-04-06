@@ -3,8 +3,6 @@ const withoutChildren = R.omit([ 'children' ]);
 import { Gtk } from './env';
 import publicElements from './elements';
 
-const log = print;
-
 export default {
 	now: Date.now,
 

@@ -23,6 +23,13 @@ window.setTimeout = function(func, delay, ...args) {
 };
 window.clearTimeout = GLib.source_remove;
 
+// Support log
+window.log = function(...args) {
+	if (process.env.DEBUG_REACT_GTK) {
+		print(...args);
+	}
+};
+
 // Support console.log
 window.console = { log: print, warn: print, error: print };
 

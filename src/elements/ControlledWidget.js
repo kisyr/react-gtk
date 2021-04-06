@@ -73,7 +73,7 @@ export default class ControlledWidget {
 				const handlerSet = changes.set.find(([ prop ]) => prop === controlledHandlerName);
 				const controlledHandler = handlerSet
 					? handlerSet[1]
-					: (() => { print('-- default handler --'); });
+					: (() => { log('-- default handler --'); });
 				result.push([
 					controlledProp,
 					controlledValue,
@@ -101,31 +101,31 @@ export default class ControlledWidget {
 				const newValue = this.instance[controlledProp];
 				const oldValue = currentValue;
 
-				print(`notify::${controlledProp}`, newValue, oldValue);
-				print('-- control --', stringify(control));
+				log(`notify::${controlledProp}`, newValue, oldValue);
+				log('-- control --', stringify(control));
 
 				// Extra security to skip feedback loop. We actually already 
 				// avoid this by blocking *all* connected signals on instance
 				// inside updateInstanceProps when resetting below.
 				if (newValue == oldValue) {
-					print('-- skip --');
+					log('-- skip --');
 					return;
 				}
 
 				// Reset the instance prop value because this is controlled.
 				// This is done with blocking *all* connected signals inside
 				// updateInstanceProps.
-				print('-- begin reset --', oldValue);
+				log('-- begin reset --', oldValue);
 				updateInstanceProps(this.instance, {
 					unset: [],
 					set: [[ controlledProp, oldValue ]],
 				});
-				print('-- end reset --');
+				log('-- end reset --');
 
 				if (controlledHandler) {
-					print('-- begin call --', controlledHandlerName, newValue);
+					log('-- begin call --', controlledHandlerName, newValue);
 					controlledHandler(newValue);
-					print('-- end call --');
+					log('-- end call --');
 				}
 			};
 
