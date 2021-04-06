@@ -15,8 +15,8 @@ import { Gtk } from '../../src/env';
 const SpinButtonExample = (props) => {
 	const [ value, setValue ] = useState(5);
 
-	const handleValueChanged = (newValue) => {
-		print('SpinButton::handleValueChanged', newValue);
+	const handleChange = (newValue) => {
+		print('SpinButton::handleChange', newValue);
 		if (!props.noop) {
 			setValue(newValue);
 		}
@@ -28,7 +28,7 @@ const SpinButtonExample = (props) => {
 			upper={12}
 			stepIncrement={2}
 			value={value}
-			onValueChanged={handleValueChanged}
+			onChangeValue={handleChange}
 		/>
 	);
 };

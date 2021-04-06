@@ -1,6 +1,6 @@
 import omit from 'ramda/src/omit';
 import { Gtk } from '../env';
-import Widget from './Widget';
+import ControlledWidget from './ControlledWidget';
 
 const adjustmentProps = [ 'lower', 'upper', 'pageIncrement', 'stepIncrement' ];
 
@@ -18,15 +18,13 @@ function createAdjustment(adjustment) {
 	});
 }
 
-export default class SpinButton extends Widget {
+export default class SpinButton extends ControlledWidget {
 	get type() {
 		return Gtk.SpinButton;
 	}
 
 	get controls() {
-		return [
-			[ 'value', 'onValueChanged' ],
-		];
+		return [ 'value' ];
 	}
 
 	constructor(props) {
