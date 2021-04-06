@@ -1,111 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createApp } from '../../src/render';
 import {
 	Window,
 	ScrolledWindow,
 	Box,
-	HBox,
-	VBox,
-	Image,
-	TreeView,
-	TreeViewColumn,
-	CellRendererText,
+	Expander,
+	Label,
 } from '../../src/components';
+import { Gtk } from '../../src/env';
 import fs from './fs';
 
-const R = require('ramda');
-
-function findNode(node, path) {
-	if (R.is(Array, node)) {
-		return findNode({ path: '__dummy__', children: node }, path);
-	}
-	if (path === node.path) {
-		return node;
-	}
-	if (node.children) {
-		for (const child of node.children) {
-			const found = findNode(child, path);
-			if (found) {
-				return found;
-			}
-		}
-	}
-	return null;
+function constructPath(base, part) {
+	return `/${base}/${part}`.replace(/\/+/g, '/');
 }
 
-function fetchDirRecursive(path, maxDepth, depth = 0) {
-	try {
-		return fs.readdirSync(path).map(fileName => {
-			const filePath = path + fileName + '/';
-			const children = depth < maxDepth
-				? fetchDir(filePath, maxDepth, depth + 1)
-				: null;
-			return {
-				path: filePath,
-				name: fileName,
-				children: children,
-				loaded: true,
-			};
-		});
-	} catch (e) {
-		return [];
-	}
+function getBaseName(path) {
+	return path === '/'
+		? path
+		: path.split('/').slice(-1).pop();
 }
 
-function fetchDir(path) {
-	try {
-		return fs.readdirSync(path).map(fileName => {
-			const filePath = path + fileName + '/';
-			return {
-				path: filePath,
-				name: fileName,
-				children: [{}],
-				loaded: false,
-			};
-		});
-	} catch (e) {
-		return [];
-	}
-}
+const FileList = (props) => {
+	const [ info, setInfo ] = useState(null);
+	const [ files, setFiles ] = useState(null);
+	const [ expanded, setExpanded ] = useState(false);
 
-const App = (props) => {
-	const [ model, setModel ] = useState(fetchDir('/', 1));
-
-	// TODO: Fix event handling for this - Seems broken of treeStore model clearing on updates
-	const handleRowExpanded = (row, indices) => {
-		console.log('handleRowExpanded', JSON.stringify(row), JSON.stringify(indices));
-		if (!row.loaded) {
-			const newModel = R.clone(model);
-			const node = findNode(newModel, row.path);
-			console.log('node', JSON.stringify(node));
-			if (node) {
-				node.children = fetchDir(node.path);
-				node.loaded = true;
-				console.log('newModel', JSON.stringify(newModel));
-				setModel(newModel);
-			}
-		}
+	const handleToggle = () => {
+		setExpanded(!expanded);
 	};
 
-	const handleRowSelected = (row) => {
-		console.log('handleRowSelected', JSON.stringify(row));
-	};
+	useEffect(() => {
+		if (props.path) {
+			const newInfo = fs.statSync(props.path);
+			setInfo(newInfo);
+			setFiles(null);
+		}
+	}, [ props.path ]);
+
+	useEffect(() => {
+		if (props.path && expanded && files === null) {
+			const newFiles = fs.readdirSync(props.path).map(file => ({
+				name: file,
+				path: constructPath(props.path, file),
+			}));
+			setFiles(newFiles);
+		}
+	}, [ expanded ]);
+
+	const fileName = getBaseName(props.path);
+	const depth = props.depth || 0;
+
+	if (info === null) {
+		return null;
+	}
 
 	return (
-		<Window title="Counter" defaultWidth={640} defaultHeight={480}>
-			<HBox>
-				<TreeView
-					treeStore={model}
-					onRowExpanded={handleRowExpanded}
-					onRowSelected={handleRowSelected}
+		<Box
+			orientation={Gtk.Orientation.VERTICAL}
+			marginStart={depth * 5}
+		>
+			{info.isDirectory() ? (
+				<Expander
+					label={fileName}
+					halign={Gtk.Align.START}
+					expanded={expanded}
+					onChangeExpanded={handleToggle}
 				>
-					<TreeViewColumn>
-						<CellRendererText dataFunc={row => row.name || ''} />
-					</TreeViewColumn>
-				</TreeView>
-			</HBox>
+					<Box orientation={Gtk.Orientation.VERTICAL}>
+						{files !== null && files.map((file, index) => (
+							<FileList path={file.path} depth={depth + 1} />
+						))}
+					</Box>
+				</Expander>
+			) : (
+				<Label halign={Gtk.Align.START} label={fileName} />
+			)}
+		</Box>
+	);
+};
+
+const App = (props) => {
+	return (
+		<Window title="FileTree" defaultWidth={640} defaultHeight={480}>
+			<ScrolledWindow>
+				<FileList path="/" />
+			</ScrolledWindow>
 		</Window>
 	);
 }
 
 createApp(<App />).run([]);
+

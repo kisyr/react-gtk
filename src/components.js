@@ -16,6 +16,7 @@ const Expander = wrap('gtk-expander');
 const HeaderBar = wrap('gtk-headerbar');
 const Image = wrap('gtk-image');
 const Label = wrap('gtk-label');
+const ScrolledWindow = wrap('gtk-scrolledwindow');
 const SpinButton = wrap('gtk-spinbutton');
 const TreeView = wrap('gtk-treeview');
 const TreeViewColumn = wrap('gtk-treeviewcolumn');
@@ -30,6 +31,7 @@ export {
 	HeaderBar,
 	Image,
 	Label,
+	ScrolledWindow,
 	SpinButton,
 	TreeView,
 	TreeViewColumn,

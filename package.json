@@ -8,7 +8,8 @@
     "example:counter": "webpack --config examples/counter/webpack.config.js && gjs examples/counter/dist/app.js",
     "example:todo": "webpack --config examples/todo/webpack.config.js && gjs examples/todo/dist/app.js",
     "example:images": "webpack --config examples/images/webpack.config.js && gjs examples/images/dist/app.js",
-    "example:tree": "webpack --config examples/tree/webpack.config.js && gjs examples/tree/dist/app.js"
+    "example:tree": "webpack --config examples/tree/webpack.config.js && gjs examples/tree/dist/app.js",
+    "example:filetree": "webpack --config examples/filetree/webpack.config.js && gjs examples/filetree/dist/app.js"
   },
   "keywords": [
     "gtk",

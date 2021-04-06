@@ -6,6 +6,7 @@ import Expander from './Expander';
 import HeaderBar from './HeaderBar';
 import Image from './Image';
 import Label from './Label';
+import ScrolledWindow from './ScrolledWindow';
 import SpinButton from './SpinButton';
 import TreeView from './TreeView';
 import TreeViewColumn from './TreeViewColumn';
@@ -20,6 +21,7 @@ export default {
 	'gtk-headerbar': HeaderBar,
 	'gtk-image': Image,
 	'gtk-label': Label,
+	'gtk-scrolledwindow': ScrolledWindow,
 	'gtk-spinbutton': SpinButton,
 	'gtk-treeview': TreeView,
 	'gtk-treeviewcolumn': TreeViewColumn,
