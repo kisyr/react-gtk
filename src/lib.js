@@ -16,6 +16,7 @@ export function isValidSignal(type, prop) {
 }
 
 export function disconnectSignal(instance, prop) {
+	instance._connectedSignals = instance._connectedSignals || {};
 	const signalName = getInternalSignalName(prop);
 	if (typeof instance._connectedSignals[signalName] !== 'undefined') {
 		instance.disconnect(instance._connectedSignals[signalName]);
@@ -24,6 +25,7 @@ export function disconnectSignal(instance, prop) {
 }
 
 export function connectSignal(instance, prop, handler) {
+	instance._connectedSignals = instance._connectedSignals || {};
 	const signalName = getInternalSignalName(prop);
 	disconnectSignal(instance, prop);
 	instance._connectedSignals[signalName] = instance.connect(signalName, handler);

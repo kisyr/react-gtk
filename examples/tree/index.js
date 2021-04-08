@@ -8,26 +8,26 @@ import {
 	CellRendererText,
 	Button,
 } from '../../src/components';
-
-const R = require('ramda');
+import { Gtk } from '../../src/env';
 
 const modelA = [
 	{
 		path: '/',
 		children: [
 			{
-				path: '/tmp/',
+				path: '/foo',
+				expanded: true,
 				children: [
 					{
-						path: '/tmp/images/',
+						path: '/foo/images',
 					},
 					{
-						path: '/tmp/foo/',
+						path: '/bar/foo',
 					},
 				],
 			},
 			{
-				path: '/bar/',
+				path: '/bar',
 			},
 		],
 	},
@@ -35,10 +35,27 @@ const modelA = [
 
 const modelB = [
 	{
-		path: '/home/foo/',
+		path: '/',
 		children: [
 			{
-				path: '/home/foo/foobar/',
+				path: '/foo',
+				children: [
+					{
+						path: '/foo/images',
+						expanded: true,
+						children: [
+							{
+								path: '/foo/images/qux',
+							},
+						],
+					},
+					{
+						path: '/bar/foo',
+					},
+				],
+			},
+			{
+				path: '/bar',
 			},
 		],
 	},
@@ -51,16 +68,25 @@ const App = (props) => {
 		console.log('handleRowExpanded', JSON.stringify(row), JSON.stringify(indices));
 	};
 
-	const handleRowSelected = (row) => {
-		console.log('handleRowSelected', JSON.stringify(row));
+	const handleRowCollapsed = (row, indices) => {
+		console.log('handleRowCollapsed', JSON.stringify(row), JSON.stringify(indices));
+	};
+
+	const handleRowSelected = (row, indices) => {
+		console.log('handleRowSelected', JSON.stringify(row), JSON.stringify(indices));
+	};
+
+	const handleToggleModel = () => {
+		setModel(model === modelA ? modelB : modelA);
 	};
 
 	return (
 		<Window title="Counter" defaultWidth={640} defaultHeight={480}>
-			<Box>
+			<Box orientation={Gtk.Orientation.HORIZONTAL} homogeneous={true}>
 				<TreeView
 					treeStore={model}
 					onRowExpanded={handleRowExpanded}
+					onRowCollapsed={handleRowCollapsed}
 					onRowSelected={handleRowSelected}
 				>
 					<TreeViewColumn>
@@ -68,7 +94,7 @@ const App = (props) => {
 						<CellRendererText dataFunc={row => row.path} />
 					</TreeViewColumn>
 				</TreeView>
-				<Button label="Test" onClicked={() => setModel(modelB)} />
+				<Button label="Test" onClicked={handleToggleModel} />
 			</Box>
 		</Window>
 	);
