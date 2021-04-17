@@ -19,6 +19,7 @@ const Image = wrap('gtk-image');
 const Label = wrap('gtk-label');
 const ScrolledWindow = wrap('gtk-scrolledwindow');
 const SpinButton = wrap('gtk-spinbutton');
+const Spinner = wrap('gtk-spinner');
 const TreeView = wrap('gtk-treeview');
 const TreeViewColumn = wrap('gtk-treeviewcolumn');
 const Window = wrap('gtk-window');
@@ -35,6 +36,7 @@ export {
 	Label,
 	ScrolledWindow,
 	SpinButton,
+	Spinner,
 	TreeView,
 	TreeViewColumn,
 	Window,
