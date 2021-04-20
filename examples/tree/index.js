@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { createApp } from '../../src/render';
+
 import {
+	createApp,
+	Gtk,
 	Window,
 	Box,
 	TreeView,
 	TreeViewColumn,
 	CellRendererText,
 	Button,
-} from '../../src/components';
-import { Gtk } from '../../src/env';
+} from '../../src/index';
 
 const modelA = [
 	{

@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import uuid from 'react-native-uuid';
-import { createApp } from '../../src/render';
-import { Window, Box, Label, Button, Image, Entry } from '../../src/components';
-import { Gtk } from '../../src/env';
+
+import {
+	createApp,
+	Gtk,
+	Window,
+	Box,
+	Label,
+	Button,
+	Image,
+	Entry,
+} from '../../src/index';
 
 const Task = (props) => {
 	const getTaskLabel = () => {

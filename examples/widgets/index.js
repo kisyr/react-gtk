@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { createApp } from '../../src/render';
+
 import {
+	createApp,
+	Gtk,
 	Window,
 	HeaderBar,
 	Box,
@@ -9,8 +11,7 @@ import {
 	SpinButton,
 	Entry,
 	Expander,
-} from '../../src/components';
-import { Gtk } from '../../src/env';
+} from '../../src/index';
 
 const SpinButtonExample = (props) => {
 	const [ value, setValue ] = useState(5);

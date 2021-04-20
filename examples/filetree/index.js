@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import clone from 'ramda/src/clone';
-import { createApp } from '../../src/render';
+
 import {
+	createApp,
+	Gtk,
 	Window,
 	ScrolledWindow,
 	Box,
@@ -10,8 +12,8 @@ import {
 	TreeView,
 	TreeViewColumn,
 	CellRendererText,
-} from '../../src/components';
-import { Gtk } from '../../src/env';
+} from '../../src/index';
+
 import fs from './fs';
 
 function constructPath(base, part) {

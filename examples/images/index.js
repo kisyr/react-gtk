@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import { createApp } from '../../src/render';
-import { Window, Box, Image } from '../../src/components';
+
+import {
+	createApp,
+	Window,
+	Box,
+	Image,
+} from '../../src/index';
 
 const App = (props) => {
 	return (

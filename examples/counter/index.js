@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { createApp } from '../../src/render';
-import { Window, Box, Label, Button } from '../../src/components';
-import { Gtk } from '../../src/env';
+
+import {
+	createApp,
+	Gtk,
+	Window,
+	Box,
+	Label,
+	Button,
+} from '../../src/index';
 
 const App = (props) => {
 	const [ counter, setCounter ] = useState(0);
