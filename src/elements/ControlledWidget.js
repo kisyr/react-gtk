@@ -1,55 +1,20 @@
 import { Gtk } from '../env';
-import {
-	updateInstanceProps,
-	updateInstanceSignals,
-	rewriteSignalHandler,
-	isProp,
-	isSignal,
-} from '../lib';
+import { updateInstanceProps, isProp } from '../lib';
+import Widget from './Widget';
 
-export default class ControlledWidget {
-	get type() {
-		return Gtk.Widget;
-	}
-
+export default class ControlledWidget extends Widget {
 	get controls() {
 		return [];
 	}
 
 	constructor(props) {
-		// Create an instance with props without children and no signals.
-		const appliedProps = Object.fromEntries(Object.entries(props)
-			.filter(([ prop ]) => isProp(this.type, prop))
-			.filter(([ prop ]) => prop !== 'children')
-		);
-
-		this.instance = new this.type();
+		super({});
 
 		// Trigger an update to initialize controlled handlers.
 		const appliedSet = Object.entries(props)
 			.filter(([ prop ]) => prop !== 'children');
 
 		this.update({ unset: [], set: appliedSet });
-	}
-
-	appendChild(child) {
-		const children = this.instance.get_children();
-
-		if (!children.includes(child.instance)) {
-			this.instance.add(child.instance);
-		}
-	}
-
-	insertBefore(child, beforeChild) {
-		return this.appendChild(child);
-	}
-
-	removeChild(child) {
-		this.instance.remove(child.instance);
-	}
-
-	show() {
-		this.instance.show();
 	}
 
 	update(changes) {
@@ -92,40 +57,34 @@ export default class ControlledWidget {
 			// changes, resets the instance value and callbacks prop handler.
 			const [
 				controlledProp,
-				currentValue,
+				controlledValue,
 				controlledHandlerName,
 				controlledHandler,
 			] = control;
 
 			const wrapper = () => {
 				const newValue = this.instance[controlledProp];
-				const oldValue = currentValue;
+				const oldValue = controlledValue;
 
 				log(`notify::${controlledProp}`, newValue, oldValue);
-				log('-- control --', stringify(control));
 
 				// Extra security to skip feedback loop. We actually already 
 				// avoid this by blocking *all* connected signals on instance
 				// inside updateInstanceProps when resetting below.
 				if (newValue == oldValue) {
-					log('-- skip --');
 					return;
 				}
 
 				// Reset the instance prop value because this is controlled.
 				// This is done with blocking *all* connected signals inside
 				// updateInstanceProps.
-				log('-- begin reset --', oldValue);
 				updateInstanceProps(this.instance, {
 					unset: [],
 					set: [[ controlledProp, oldValue ]],
 				});
-				log('-- end reset --');
 
 				if (controlledHandler) {
-					log('-- begin call --', controlledHandlerName, newValue);
 					controlledHandler(newValue);
-					log('-- end call --');
 				}
 			};
 
@@ -137,20 +96,7 @@ export default class ControlledWidget {
 			.filter(([ prop ]) => !validControlledProps.find(control => control[2] === prop))
 			.concat(controlledHandlerSet);
 
-		// Update instance prop values. This is done with blocking *all*
-		// connected signals for instance to avoid any side effects or
-		// feedback loops.
-		updateInstanceProps(this.instance, {
-			unset: changes.unset.filter(prop => isProp(this.type, prop)),
-			set: appliedSet.filter(([ prop ]) => isProp(this.type, prop)),
-		});
-
-		// Update instance signals. This includes the overwritten handlers
-		// for controlled props.
-		updateInstanceSignals(this.instance, {
-			unset: changes.unset.filter(prop => isSignal(this.type, prop)),
-			set: appliedSet.filter(([ prop ]) => isSignal(this.type, prop)),
-		});
+		super.update({ ...changes, set: appliedSet });
 	}
 }
 
