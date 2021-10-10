@@ -5,6 +5,7 @@ import {
 	Window,
 	Box,
 	Image,
+	Picture,
 } from '../../src/index';
 
 const App = (props) => {
@@ -12,12 +13,7 @@ const App = (props) => {
 		<Window title="Counter" defaultWidth={640} defaultHeight={480}>
 			<Box>
 				<Image file="./examples/images/test.jpg" />
-				<Image pixbuf={{
-					filename: './examples/images/test.jpg',
-					width: 100,
-					height: -1,
-					preserveAspectRatio: true,
-				}} />
+				<Picture file="./examples/images/test.jpg" />
 			</Box>
 		</Window>
 	);

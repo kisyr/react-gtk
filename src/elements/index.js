@@ -11,6 +11,7 @@ import Label from './Label';
 import ScrolledWindow from './ScrolledWindow';
 import SpinButton from './SpinButton';
 import Spinner from './Spinner';
+import Picture from './Picture';
 import TreeView from './TreeView';
 import TreeViewColumn from './TreeViewColumn';
 import Window from './Window';
@@ -29,6 +30,7 @@ export default {
 	'gtk-scrolledwindow': ScrolledWindow,
 	'gtk-spinbutton': SpinButton,
 	'gtk-spinner': Spinner,
+	'gtk-picture': Picture,
 	'gtk-treeview': TreeView,
 	'gtk-treeviewcolumn': TreeViewColumn,
 	'gtk-window': Window,
