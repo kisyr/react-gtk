@@ -114,7 +114,9 @@ const App = (props) => {
 	return (
 		<Window title="FileTree" defaultWidth={640} defaultHeight={480}>
 			<Box orientation={Gtk.Orientation.HORIZONTAL} homogeneous={true}>
-				<FileTree path="/" onlyDirectories={true} />
+				<ScrolledWindow>
+					<FileTree path="/" onlyDirectories={true} />
+				</ScrolledWindow>
 			</Box>
 		</Window>
 	);
