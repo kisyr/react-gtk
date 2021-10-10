@@ -30,10 +30,8 @@ export default class Widget {
 	}
 
 	appendChild(child) {
-		const children = this.instance.get_children();
-
-		if (!children.includes(child.instance)) {
-			this.instance.add(child.instance);
+		if (!this.hasChild(child)) {
+			child.instance.insert_after(this.instance, this.instance.get_last_child());
 		}
 	}
 
@@ -61,6 +59,26 @@ export default class Widget {
 			unset: changes.unset.filter(prop => isSignal(this.type, prop)),
 			set: changes.set.filter(([ prop ]) => isSignal(this.type, prop)),
 		});
+	}
+
+	getChildren() {
+		const children = [];
+
+		for (
+			let child = this.instance.get_first_child();
+			!!child;
+			child = child.get_next_sibling()
+		) {
+			children.push(child);
+		}
+
+		return children;
+	}
+
+	hasChild(child) {
+		const children = this.getChildren();
+
+		return children.includes(child.instance);
 	}
 }
 

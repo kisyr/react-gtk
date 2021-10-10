@@ -16,7 +16,7 @@ export default class Window extends Widget {
 	}
 
 	appendChild(child) {
-		const children = this.instance.get_children();
+		const children = this.getChildren();
 
 		if (
 			!children.includes(child.instance) &&
@@ -26,7 +26,9 @@ export default class Window extends Widget {
 			return;
 		}
 
-		super.appendChild(child);
+		if (!this.hasChild(child)) {
+			this.instance.set_child(child.instance);
+		}
 	}
 
 	removeChild(child) {
@@ -36,6 +38,10 @@ export default class Window extends Widget {
 		}
 
 		super.removeChild(child);
+	}
+
+	show() {
+		this.instance.present();
 	}
 }
 

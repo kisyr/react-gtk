@@ -107,10 +107,8 @@ export default class TreeView extends Widget {
 	}
 
 	appendChild(child) {
-		const children = this.instance.get_children();
-
 		if (
-			!children.includes(child.instance) &&
+			!this.hasChild(child) &&
 			child.instance instanceof Gtk.TreeViewColumn
 		) {
 			this.instance.append_column(child.instance);

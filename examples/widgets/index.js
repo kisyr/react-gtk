@@ -77,7 +77,9 @@ const App = (props) => {
 
 	return (
 		<Window title="Widgets" defaultWidth={640} defaultHeight={480}>
-			<HeaderBar showCloseButton={true} hasSubtitle={true} title="Widgets" />
+			<HeaderBar>
+				<Button label="Test" onClicked={() => log('Clicked!')} />
+			</HeaderBar>
 			<Box orientation={Gtk.Orientation.VERTICAL} homogeneous={true}>
 				<Box orientation={Gtk.Orientation.HORIZONTAL}>
 					<Label label={!noop ? 'Widgets are updating' : 'Widgets are noop'} />

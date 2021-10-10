@@ -76,7 +76,6 @@ const App = (props) => {
 			title="TodoApp"
 			defaultWidth={320}
 			defaultHeight={480}
-			borderWidth={20}
 		>
 			<Box orientation={Gtk.Orientation.VERTICAL} spacing={10}>
 				<Entry

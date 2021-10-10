@@ -1,5 +1,5 @@
 // Specify Gtk version
-imports.gi.versions.Gtk = "3.0";
+imports.gi.versions.Gtk = "4.0";
 
 const GObject = imports.gi.GObject;
 const GLib = imports.gi.GLib;
