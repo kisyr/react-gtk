@@ -5,6 +5,7 @@ import Entry from './Entry';
 import Expander from './Expander';
 import EventBox from './EventBox';
 import FlowBox from './FlowBox';
+import GestureClick from './GestureClick';
 import HeaderBar from './HeaderBar';
 import Image from './Image';
 import Label from './Label';
@@ -24,6 +25,7 @@ export default {
 	'gtk-expander': Expander,
 	'gtk-eventbox': EventBox,
 	'gtk-flowbox': FlowBox,
+	'gtk-gestureclick': GestureClick,
 	'gtk-headerbar': HeaderBar,
 	'gtk-image': Image,
 	'gtk-label': Label,

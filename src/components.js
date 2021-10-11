@@ -15,6 +15,7 @@ const Entry = wrap('gtk-entry');
 const Expander = wrap('gtk-expander');
 const EventBox = wrap('gtk-eventbox');
 const FlowBox = wrap('gtk-flowbox');
+const GestureClick = wrap('gtk-gestureclick');
 const HeaderBar = wrap('gtk-headerbar');
 const Image = wrap('gtk-image');
 const Label = wrap('gtk-label');
@@ -34,6 +35,7 @@ export {
 	Expander,
 	EventBox,
 	FlowBox,
+	GestureClick,
 	HeaderBar,
 	Image,
 	Label,

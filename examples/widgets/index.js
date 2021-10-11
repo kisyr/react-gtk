@@ -11,6 +11,7 @@ import {
 	SpinButton,
 	Entry,
 	Expander,
+	GestureClick,
 } from '../../src/index';
 
 const SpinButtonExample = (props) => {
@@ -88,6 +89,10 @@ const App = (props) => {
 				<SpinButtonExample noop={noop} />
 				<EntryExample noop={noop} />
 				<ExpanderExample noop={noop} />
+				<Box>
+					<GestureClick onPressed={() => print('GestureClick::onPressed')} />
+					<Label label="GestureClick test" />
+				</Box>
 			</Box>
 		</Window>
 	);

@@ -7,6 +7,10 @@ export default class Box extends Widget {
 	}
 
 	appendChild(child) {
+		if (child.instance instanceof Gtk.GestureClick) {
+			return this.instance.add_controller(child.instance);
+		}
+
 		this.instance.append(child.instance);
 	}
 }

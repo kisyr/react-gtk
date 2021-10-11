@@ -30,6 +30,10 @@ export default class Widget {
 	}
 
 	appendChild(child) {
+		if (child.instance instanceof Gtk.GestureClick) {
+			return this.instance.add_controller(child.instance);
+		}
+
 		if (!this.hasChild(child)) {
 			child.instance.insert_after(this.instance, this.instance.get_last_child());
 		}
