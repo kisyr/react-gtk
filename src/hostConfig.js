@@ -133,7 +133,7 @@ export default {
 	},
 
 	insertBefore(parentInstance, child, beforeChild) {
-		log('insertInContainerBefore', parentInstance, child, beforeChild);
+		log('insertBefore', parentInstance, child, beforeChild);
 
 		child.show(child);
 		if (!R.is(Gtk.Application, parentInstance)) {

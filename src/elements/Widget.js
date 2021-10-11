@@ -40,7 +40,13 @@ export default class Widget {
 	}
 
 	insertBefore(child, beforeChild) {
-		return this.appendChild(child);
+		if (child.instance instanceof Gtk.GestureClick) {
+			return this.instance.add_controller(child.instance);
+		}
+
+		if (!this.hasChild(child)) {
+			child.instance.insert_before(this.instance, beforeChild.instance);
+		}
 	}
 
 	removeChild(child) {
@@ -52,8 +58,6 @@ export default class Widget {
 	}
 
 	update(changes) {
-		log('-- update --', stringify(changes));
-
 		updateInstanceProps(this.instance, {
 			unset: changes.unset.filter(prop => isProp(this.type, prop)),
 			set: changes.set.filter(([ prop ]) => isProp(this.type, prop)),
