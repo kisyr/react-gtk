@@ -9,8 +9,10 @@ import {
 	Label,
 	Button,
 	SpinButton,
+	MenuButton,
 	Entry,
 	Expander,
+	Popover,
 	GestureClick,
 } from '../../src/index';
 
@@ -80,6 +82,14 @@ const App = (props) => {
 		<Window title="Widgets" defaultWidth={640} defaultHeight={480}>
 			<HeaderBar>
 				<Button label="Test" onClicked={() => log('Clicked!')} />
+				<MenuButton iconName="open-menu-symbolic">
+					<Popover>
+						<Box orientation={Gtk.Orientation.VERTICAL}>
+							<Label label="Foo" />
+							<Label label="Bar" />
+						</Box>
+					</Popover>
+				</MenuButton>
 			</HeaderBar>
 			<Box orientation={Gtk.Orientation.VERTICAL} homogeneous={true}>
 				<Box orientation={Gtk.Orientation.HORIZONTAL}>

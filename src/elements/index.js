@@ -9,10 +9,12 @@ import GestureClick from './GestureClick';
 import HeaderBar from './HeaderBar';
 import Image from './Image';
 import Label from './Label';
+import MenuButton from './MenuButton';
+import Picture from './Picture';
+import Popover from './Popover';
 import ScrolledWindow from './ScrolledWindow';
 import SpinButton from './SpinButton';
 import Spinner from './Spinner';
-import Picture from './Picture';
 import TreeView from './TreeView';
 import TreeViewColumn from './TreeViewColumn';
 import Window from './Window';
@@ -29,10 +31,12 @@ export default {
 	'gtk-headerbar': HeaderBar,
 	'gtk-image': Image,
 	'gtk-label': Label,
+	'gtk-menubutton': MenuButton,
+	'gtk-picture': Picture,
 	'gtk-scrolledwindow': ScrolledWindow,
 	'gtk-spinbutton': SpinButton,
 	'gtk-spinner': Spinner,
-	'gtk-picture': Picture,
+	'gtk-popover': Popover,
 	'gtk-treeview': TreeView,
 	'gtk-treeviewcolumn': TreeViewColumn,
 	'gtk-window': Window,
