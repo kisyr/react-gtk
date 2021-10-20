@@ -19,7 +19,7 @@ export function render(element, container) {
 }
 
 export function createApp(element) {
-	Gtk.init(null);
+	Gtk.init();
 
 	const app = new Gtk.Application();
 
