@@ -6,13 +6,13 @@ export default class Window extends Widget {
 		return Gtk.Window;
 	}
 
-	constructor(props, rootContainerInstance) {
-		const appliedProps = {
+	createInstance(props, rootContainerInstance) {
+		const appliedProps = [
 			...props,
-			application: rootContainerInstance,
-		};
+			[ 'application', rootContainerInstance ],
+		];
 
-		super(appliedProps);
+		super.createInstance(appliedProps);
 	}
 
 	appendChild(child) {

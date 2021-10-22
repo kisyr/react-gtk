@@ -13,13 +13,21 @@ export default {
 	createInstance(type, props, rootContainerInstance, hostContext, internalInstanceHandle) {
 		log('createInstance', type, props);
 
+		// TODO: Can we just do `Type = type.replace('gtk-', '').toCamelCase()`?
 		const Type = publicElements[type];
 
 		if (!Type) {
 			throw new Error(`Unknown component: ${type}`);
 		}
 
-		return new Type(props, rootContainerInstance, hostContext, internalInstanceHandle);
+		const instance = new Type();
+		instance.createInstance(
+			Object.entries(props),
+			rootContainerInstance,
+			hostContext,
+			internalInstanceHandle
+		);
+		return instance;
 	},
 
 	createTextInstance(

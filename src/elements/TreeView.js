@@ -74,50 +74,13 @@ export default class TreeView extends Widget {
 		return Gtk.TreeView;
 	}
 
-	constructor(props) {
-		const model = createTreeModel(props.treeStore);
-
-		const appliedProps = {
-			...omit([
-				'treeStore',
-				'onRowExpanded',
-				'onRowCollapsed',
-				'onRowSelected',
-			], props),
-			model,
-		};
-
-		super(appliedProps);
-
-		expandTreeItems(this.instance, props.treeStore);
-
-		// TODO
-		// Change isSignal to only check 'onXyz'?
-		const initProps = [
-			'onRowExpanded',
-			'onRowCollapsed',
-			'onRowSelected',
-		];
-
-		const appliedSet = Object.entries(props)
-			.filter(([ prop ]) => initProps.includes(prop))
-			.filter(([ , value ]) => value !== null);
-
-		this.update({ unset: [], set: appliedSet });
-	}
-
-	appendChild(child) {
-		if (
-			!this.hasChild(child) &&
-			child.instance instanceof Gtk.TreeViewColumn
-		) {
-			this.instance.append_column(child.instance);
-		}
-	}
-
-	update(changes) {
-		const appliedSet = changes.set.map(([ prop, value ]) => {
+	parseProps(props) {
+		return props.map(([ prop, value ]) => {
 			if (prop === 'onRowSelected') {
+				if (!this.instance) {
+					return null;
+				}
+
 				const selection = this.instance.get_selection();
 				// Using this helper we disconnect any already connected handlers
 				// to avoid duplicates.
@@ -132,11 +95,22 @@ export default class TreeView extends Widget {
 			}
 
 			if (prop === 'treeStore') {
+				// If instance is null we're assuming constructor, and Gtk.TreeView
+				// requires a valid model here.
+				if (!this.instance) {
+					const model = createTreeModel(value);
+
+					return [ 'model', model ];
+				}
+
 				const model = this.instance.get_model();
+				const selection = this.instance.get_selection();
 				// Block all our signal handlers for this because this reset
 				// triggers selection:changed, treeview:row-collapsed, and
 				// treeview::row-expanded.
-				blockSignalHandler(this.instance.get_selection(), 'onChanged');
+				if (selection) {
+					//blockSignalHandler(selection, 'onChanged');
+				}
 				blockSignalHandlers(this.instance);
 
 				model.clear();
@@ -144,12 +118,18 @@ export default class TreeView extends Widget {
 				expandTreeItems(this.instance, value);
 
 				unblockSignalHandlers(this.instance);
-				unblockSignalHandler(this.instance.get_selection(), 'onChanged');
+				if (selection) {
+					//unblockSignalHandler(selection, 'onChanged');
+				}
 
 				return null;
 			}
 
 			if (prop === 'onRowExpanded' || prop === 'onRowCollapsed') {
+				if (!this.instance) {
+					return null;
+				}
+
 				const newValue = (instance, iterator, path) => {
 					const model = instance.model;
 					const row = model.get_value(iterator, 0);
@@ -161,8 +141,25 @@ export default class TreeView extends Widget {
 
 			return [ prop, value ];
 		}).filter(set => set !== null);
+	}
 
-		super.update({ ...changes, set: appliedSet });
+	createInstance(props) {
+		super.createInstance(props);
+
+		const treeStoreProp = props.find(([ prop ]) => prop === 'treeStore');
+
+		if (treeStoreProp) {
+			expandTreeItems(this.instance, treeStoreProp[1]);
+		}
+	}
+
+	appendChild(child) {
+		if (
+			!this.hasChild(child) &&
+			child.instance instanceof Gtk.TreeViewColumn
+		) {
+			this.instance.append_column(child.instance);
+		}
 	}
 }
 

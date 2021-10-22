@@ -7,15 +7,19 @@ export default class CellRendererText extends Widget {
 		return Gtk.CellRendererText;
 	}
 
-	constructor(props) {
-		const appliedProps = omit([ 'dataFunc' ], props);
+	parseProps(props) {
+		return props
+			.filter(([ prop ]) => prop !== 'dataFunc');
+	}
 
-		super(appliedProps);
+	createInstance(props) {
+		super.createInstance(props);
 
 		this.dataFunc = (column, cell, model, iterator) => {
-			if (props.dataFunc) {
+			const [ prop, dataFunc ] = props.find(([ prop ]) => prop === 'dataFunc');
+			if (dataFunc) {
 				const row = model.get_value(iterator, 0);
-				const data = props.dataFunc(row.rowData);
+				const data = dataFunc(row.rowData);
 				cell.text = String(data);
 			}
 		};

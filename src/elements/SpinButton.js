@@ -27,15 +27,17 @@ export default class SpinButton extends ControlledWidget {
 		return [ 'value' ];
 	}
 
-	constructor(props) {
-		const adjustment = createAdjustment(props);
+	createInstance(props) {
+		const adjustment = createAdjustment(Object.fromEntries(props));
 
-		const appliedProps = {
-			...omitAdjustmentProps(props),
-			adjustment,
-		};
+		const appliedProps = [
+			// Compiler error on below.
+			//...props.filter(([ prop ]) => !adjustmentProps.includes(prop))
+			...props,
+			[ 'adjustment', adjustment ],
+		].filter(([ prop ]) => !adjustmentProps.includes(prop));
 
-		super(appliedProps);
+		super.createInstance(appliedProps);
 	}
 
 	update(changes) {

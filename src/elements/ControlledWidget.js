@@ -1,5 +1,5 @@
 import { Gtk } from '../env';
-import { updateInstanceProps, isProp } from '../lib';
+import { updateInstanceProps, updateInstanceSignals, isProp, isSignal } from '../lib';
 import Widget from './Widget';
 
 export default class ControlledWidget extends Widget {
@@ -7,11 +7,11 @@ export default class ControlledWidget extends Widget {
 		return [];
 	}
 
-	constructor(props) {
-		super({});
+	createInstance(props) {
+		super.createInstance([]);
 
 		// Trigger an update to initialize controlled handlers.
-		const appliedSet = Object.entries(props)
+		const appliedSet = props
 			.filter(([ prop ]) => prop !== 'children');
 
 		this.update({ unset: [], set: appliedSet });
@@ -96,7 +96,17 @@ export default class ControlledWidget extends Widget {
 			.filter(([ prop ]) => !validControlledProps.find(control => control[2] === prop))
 			.concat(controlledHandlerSet);
 
-		super.update({ ...changes, set: appliedSet });
+		updateInstanceProps(this.instance, {
+			unset: changes.unset.filter(prop => isProp(this.type, prop)),
+			set: appliedSet.filter(([ prop ]) => isProp(this.type, prop)),
+		});
+
+		updateInstanceSignals(this.instance, {
+			unset: changes.unset.filter(prop => isSignal(this.type, prop)),
+			set: appliedSet.filter(([ prop ]) => isSignal(this.type, prop)),
+		});
+
+		//super.update({ ...changes, set: appliedSet });
 	}
 }
 
