@@ -82,7 +82,7 @@ const App = (props) => {
 		<Window title="Widgets" defaultWidth={640} defaultHeight={480}>
 			<HeaderBar>
 				<Button label="Test" onClicked={() => log('Clicked!')} />
-				<MenuButton iconName="open-menu-symbolic">
+				<MenuButton iconName="open-menu-symbolic" pack={Gtk.PackType.END}>
 					<Popover>
 						<Box orientation={Gtk.Orientation.VERTICAL}>
 							<Label label="Foo" />

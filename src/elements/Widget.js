@@ -7,9 +7,19 @@ import {
 	isSignal,
 } from '../lib';
 
+const metaProps = [
+	'pack',
+];
+
+const isMeta = (prop) => metaProps.includes(prop);
+
 export default class Widget {
 	get type() {
 		return Gtk.Widget;
+	}
+
+	get meta() {
+		return this._meta || [];
 	}
 
 	parseProps(props) {
@@ -24,7 +34,12 @@ export default class Widget {
 		// Create an instance with props without children and no signals.
 		const appliedProps = parsedProps
 			.filter(([ prop ]) => isProp(this.type, prop))
+			.filter(([ prop ]) => !isMeta(prop))
 			.filter(([ prop ]) => prop !== 'children');
+
+		// Save any meta props.
+		this._meta = parsedProps
+			.filter(([ prop ]) => isMeta(prop));
 
 		this.instance = new this.type(Object.fromEntries(appliedProps));
 
