@@ -23,11 +23,42 @@ export default class Widget {
 	}
 
 	parseProps(props) {
+		// TODO: Isn't it better to actually only set valid props inside lib.js?!
+		const invalidProps = [ 'children', 'className' ];
+
 		return props
-			.filter(([ prop ]) => prop !== 'children');
+			.filter(([ prop ]) => !invalidProps.includes(prop));
+
+		/*
+		return props.map(([ prop, value ]) => {
+			if (prop === 'children') {
+				return null;
+			}
+
+			// TODO: Refactor this
+			if (prop === 'css') {
+				if (this.instance) {
+					const cssProvider = new Gtk.CssProvider();
+					cssProvider.load_from_data(value);
+
+					this.instance.get_style_context().add_provider(
+						cssProvider,
+						Gtk.GTK_STYLE_PROVIDER_PRIORITY_USER,
+					);
+				}
+
+				return null;
+			}
+
+			return [ prop, value ];
+		}).filter(set => set !== null);
+		*/
 	}
 
 	createInstance(props) {
+		// Keep track of classNames from props
+		this.classNames = [];
+
 		// Let subclasses optionally handle parsing.
 		const parsedProps = this.parseProps(props);
 
@@ -80,6 +111,24 @@ export default class Widget {
 	}
 
 	update(changes) {
+		// Reset className
+		changes.unset.filter(prop => prop === 'className').forEach(prop => {
+			this.classNames.forEach(className => {
+				this.instance.get_style_context().remove_class(className);
+			});
+		});
+
+		// Update className
+		changes.set.filter(([ prop ]) => prop === 'className').forEach(([ prop, value ]) => {
+			this.classNames.forEach(className => {
+				this.instance.get_style_context().remove_class(className);
+			});
+			this.classNames = value.split(' ').map(className => className.trim());
+			this.classNames.forEach(className => {
+				this.instance.get_style_context().add_class(className);
+			});
+		});
+
 		const parsedSet = this.parseProps(changes.set);
 
 		updateInstanceProps(this.instance, {

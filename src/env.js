@@ -4,6 +4,7 @@ imports.gi.versions.Gtk = "4.0";
 const GObject = imports.gi.GObject;
 const GLib = imports.gi.GLib;
 const Gio = imports.gi.Gio;
+const Gdk = imports.gi.Gdk;
 const GdkPixbuf = imports.gi.GdkPixbuf;
 const Gtk = imports.gi.Gtk;
 
@@ -38,5 +39,5 @@ window.stringify = function(data) {
 	return JSON.stringify(data, (key, value) => typeof value === 'undefined' ? null : value);
 };
 
-export { GObject, GLib, Gio, GdkPixbuf, Gtk };
+export { GObject, GLib, Gio, Gdk, GdkPixbuf, Gtk };
 
