@@ -1,12 +1,11 @@
 import React from 'react';
+import GestureClickHandler from './GestureClickHandler';
 
-function wrap(elementName) {
-	return (props) => React.createElement(
-		elementName,
-		props,
-		props.children
-	);
-}
+const wrap = (elementName) => React.forwardRef((props, ref) => React.createElement(
+	elementName,
+	{ ref, ...props },
+	props.children
+));
 
 const Box = wrap('gtk-box');
 const Button = wrap('gtk-button');
@@ -52,5 +51,6 @@ export {
 	TreeView,
 	TreeViewColumn,
 	Window,
+	GestureClickHandler,
 };
 
