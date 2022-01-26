@@ -1,6 +1,6 @@
 {
   "name": "react-gtk",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "React components for GTK for use with GJS.",
   "main": "src/index.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "example:todo": "webpack --config examples/todo/webpack.config.js && gjs examples/todo/dist/app.js",
     "example:images": "webpack --config examples/images/webpack.config.js && gjs examples/images/dist/app.js",
     "example:tree": "webpack --config examples/tree/webpack.config.js && gjs examples/tree/dist/app.js",
-    "example:filetree": "webpack --config examples/filetree/webpack.config.js && gjs examples/filetree/dist/app.js"
+    "example:filetree": "webpack --config examples/filetree/webpack.config.js && gjs examples/filetree/dist/app.js",
+    "example:list": "webpack --config examples/list/webpack.config.js && gjs examples/list/dist/app.js"
   },
   "keywords": [
     "gtk",

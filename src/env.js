@@ -32,7 +32,7 @@ window.log = function(...args) {
 };
 
 // Support console.log
-window.console = { log: print, warn: print, error: print };
+//window.console = window.console || { log: print, warn: print, error: print };
 
 // Support proper stringify
 window.stringify = function(data) {

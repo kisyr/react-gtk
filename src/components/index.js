@@ -19,6 +19,8 @@ const GestureClick = wrap('gtk-gestureclick');
 const HeaderBar = wrap('gtk-headerbar');
 const Image = wrap('gtk-image');
 const Label = wrap('gtk-label');
+const ListBox = wrap('gtk-listbox');
+const ListBoxRow = wrap('gtk-listboxrow');
 const MenuButton = wrap('gtk-menubutton');
 const ScrolledWindow = wrap('gtk-scrolledwindow');
 const SpinButton = wrap('gtk-spinbutton');
@@ -42,6 +44,8 @@ export {
 	HeaderBar,
 	Image,
 	Label,
+	ListBox,
+	ListBoxRow,
 	MenuButton,
 	ScrolledWindow,
 	SpinButton,

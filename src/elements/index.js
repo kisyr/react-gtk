@@ -9,6 +9,8 @@ import Frame from './Frame';
 import HeaderBar from './HeaderBar';
 import Image from './Image';
 import Label from './Label';
+import ListBox from './ListBox';
+import ListBoxRow from './ListBoxRow';
 import MenuButton from './MenuButton';
 import Picture from './Picture';
 import Popover from './Popover';
@@ -31,6 +33,8 @@ export default {
 	'gtk-headerbar': HeaderBar,
 	'gtk-image': Image,
 	'gtk-label': Label,
+	'gtk-listbox': ListBox,
+	'gtk-listboxrow': ListBoxRow,
 	'gtk-menubutton': MenuButton,
 	'gtk-picture': Picture,
 	'gtk-scrolledwindow': ScrolledWindow,
